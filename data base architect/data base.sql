@@ -188,3 +188,17 @@ ALTER TABLE Episode ADD CONSTRAINT fk_episode_video FOREIGN KEY (video_id) REFER
 ALTER TABLE Film ADD CONSTRAINT fk_film_video FOREIGN KEY (video_id) REFERENCES Video(id) ON DELETE SET NULL;
 ALTER TABLE media ADD CONSTRAINT fk_media_image FOREIGN KEY (image_id) REFERENCES image(id) ON DELETE SET NULL;
 ALTER TABLE preferences ADD CONSTRAINT fk_preferences_genre FOREIGN KEY (genre_id) REFERENCES genre(id) ON DELETE SET NULL;
+
+
+--adding image_id field to users table
+ALTER TABLE users ADD COLUMN image_id INTEGER;
+ALTER TABLE users ADD CONSTRAINT fk_users_image FOREIGN KEY (image_id) REFERENCES image(id) ON DELETE SET NULL;
+
+--adding image_id field to producer table
+ALTER TABLE producer ADD COLUMN image_id INTEGER;
+ALTER TABLE producer ADD CONSTRAINT fk_producer_image FOREIGN KEY (image_id) REFERENCES image(id) ON DELETE SET NULL;
+
+--adding image_id field to actor table
+ALTER TABLE actor ADD COLUMN image_id INTEGER;
+ALTER TABLE actor ADD CONSTRAINT fk_actor_image FOREIGN KEY (image_id) REFERENCES image(id) ON DELETE SET NULL;
+
