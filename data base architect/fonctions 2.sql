@@ -1,3 +1,4 @@
+alter session set "_ORACLE_SCRIPT"=true;  
 create or replace PROCEDURE DELETE_USER (p_name in varchar2) as
 BEGIN
 DELETE FROM users WHERE name = p_name;-
@@ -41,7 +42,6 @@ END;
 create user newuser IDENTIFIED BY 1234;
 grant EXECUTE on insert_user to newuser;
 grant create session to newuser;
-grant create PROCEDURE to newuser;
 
 
 
