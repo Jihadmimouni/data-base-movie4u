@@ -202,3 +202,5 @@ ALTER TABLE producer ADD CONSTRAINT fk_producer_image FOREIGN KEY (image_id) REF
 ALTER TABLE actor ADD COLUMN image_id INTEGER;
 ALTER TABLE actor ADD CONSTRAINT fk_actor_image FOREIGN KEY (image_id) REFERENCES image(id) ON DELETE SET NULL;
 
+--adding view count to media table
+ALTER TABLE media ADD view_count INTEGER DEFAULT 0;

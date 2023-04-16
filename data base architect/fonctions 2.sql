@@ -34,7 +34,6 @@ grant execute on delete_user to P_NAME;
 grant execute on update_user to P_NAME;
 commit;
 END; 
-/
 
 
 
