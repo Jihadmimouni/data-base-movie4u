@@ -203,3 +203,10 @@ ALTER TABLE actor ADD CONSTRAINT fk_actor_image FOREIGN KEY (image_id) REFERENCE
 
 --adding view count to media table
 ALTER TABLE media ADD view_count INTEGER DEFAULT 0;
+
+
+
+--adding unique name constraint to users,actor and producer table
+ALTER TABLE users ADD CONSTRAINT unique_name_user UNIQUE (name);
+ALTER TABLE actor ADD CONSTRAINT unique_name_actor UNIQUE (name);
+ALTER TABLE producer ADD CONSTRAINT unique_name_producer UNIQUE (name);
