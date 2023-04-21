@@ -23,7 +23,6 @@ CREATE TABLE Film (
 CREATE TABLE Serie (
     id INTEGER PRIMARY KEY,
     media_id INTEGER ,
-    producer_id INTEGER ,
     synopsis_id INTEGER , 
     genre_id INTEGER
 );
