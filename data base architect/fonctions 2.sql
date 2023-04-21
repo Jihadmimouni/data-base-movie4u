@@ -24,6 +24,7 @@ SELECT max(id) INTO user_id from users ;
 SELECT max(id) INTO im_id from image ; 
 IF user_id IS NULL THEN user_id := 0; END IF;
 IF im_id IS NULL THEN im_id := 0; END IF;
+IF SELECT count(*) from users where name = p_name > 0 THEN raise user_exist END IF;
 INSERT INTO image (id, image) values (im_id + 1, p_image);
 INSERT INTO users (id, name, email, password, birthdate,image_id) values (user_id + 1, p_name, p_email, p_password, p_birthdate,im_id + 1); 
 CREATE User P_NAME IDENTIFIED BY P_PASSWORD;
@@ -33,6 +34,9 @@ grant UPDATE on P_NAME to P_NAME;
 grant execute on delete_user to P_NAME;
 grant execute on update_user to P_NAME;
 commit;
+exception
+when user_exist then
+raise_application_error(-20001,'user already exist');
 END; 
 
 
