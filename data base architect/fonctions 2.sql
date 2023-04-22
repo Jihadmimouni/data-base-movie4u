@@ -67,6 +67,38 @@ RETURN media_cursor;
 END;
 
 
+--creating fonction for searching media by actor
+create or replace function search_media_actor (actor_name varchar2) return t_media as
+media_cursor sys_refcursor;
+actors_id number;
+media_id sys_refcursor;
+ TYPE t_media
+        IS TABLE OF media%ROWTYPE
+        INDEX BY NUMBER;
+Ind number;
+BEGIN
+ind:=0;
+select id into actor_id from actor where name = actor_name;
+open media_id for select media_id from ROLE where actor_id = actors_id;
+for i in media_id loop
+OPEN media_cursor FOR SELECT * FROM MEDIA where id = i.media_id;
+for K in media_cursor loop
+ind:=ind+1;
+media(ind):=k;
+end loop;
+end loop;
+return media;
+END;
+
+
+
+
+
+
+
+
+
+
 --creating procedure for inserting new user and creating new user for database
 
 create or replace procedure insert_user (p_name in varchar2, p_email in varchar2, p_password in varchar2 , p_birthdate in DATE,p_image BLOB) as 
