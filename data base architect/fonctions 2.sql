@@ -2,10 +2,11 @@ alter session set "_ORACLE_SCRIPT"=true;
 create or replace PROCEDURE DELETE_USER (p_name in varchar2) as
 BEGIN
 DELETE FROM users WHERE name = p_name;-
-EXECUTE IMMEDIATE ('drop user '||p_name||' cascade');
+EXECUTE IMfilmTE ('drop user '||p_name||' cascade');
 commit;
 END;
 
+--creating procedure for updating user info
 create or replace PROCEDURE UPDATE_USER (user_id number ,p_name in varchar2, p_email in varchar2, p_password in varchar2 , p_birthdate in DATE,p_image BLOB) as
 im_id number;
 BEGIN
@@ -23,6 +24,50 @@ OPEN user_cursor FOR SELECT * FROM users where id = user_id;
 RETURN user_cursor;
 END;
 
+--creating fonction for getting if user id exist in admin table
+create or replace function check_admin (user_id number) return number as
+admin_id number;
+BEGIN
+SELECT id INTO admin_id from admin where users_id = user_id;
+if admin_id is null then
+return 0;
+else
+return 1;
+end if;
+END;
+
+--creating fonction for getting film based on genre 
+create or replace function get_film (genre_id number) return sys_refcursor as
+film_cursor sys_refcursor;
+BEGIN
+OPEN film_cursor FOR SELECT * FROM Film where genre_id = genre_id;
+RETURN film_cursor;
+END;
+
+--creating fonction for getting serie based on genre
+create or replace function get_serie (genre_id number) return sys_refcursor as
+serie_cursor sys_refcursor;
+BEGIN
+OPEN serie_cursor FOR SELECT * FROM Serie where genre_id = genre_id;
+RETURN serie_cursor;
+END;
+
+
+--creating fonction for getting media based on name
+create or replace function get_media (media_name varchar2) return sys_refcursor as
+media_cursor sys_refcursor;
+media_id number;
+BEGIN
+select id into media_id from media where name = media_name;
+OPEN media_cursor FOR SELECT * FROM Film where id = media_id;
+if media_cursor%notfound then
+OPEN media_cursor FOR SELECT * FROM Serie where id = media_id;
+end if;
+RETURN media_cursor;
+END;
+
+
+--creating procedure for inserting new user and creating new user for database
 
 create or replace procedure insert_user (p_name in varchar2, p_email in varchar2, p_password in varchar2 , p_birthdate in DATE,p_image BLOB) as 
 user_id number;
