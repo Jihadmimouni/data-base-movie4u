@@ -210,3 +210,9 @@ ALTER TABLE media ADD view_count INTEGER DEFAULT 0;
 ALTER TABLE users ADD CONSTRAINT unique_name_user UNIQUE (name);
 ALTER TABLE actor ADD CONSTRAINT unique_name_actor UNIQUE (name);
 ALTER TABLE producer ADD CONSTRAINT unique_name_producer UNIQUE (name);
+
+
+
+
+--adding type field to media table
+ALTER TABLE media ADD type VARCHAR(255);

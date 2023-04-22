@@ -37,7 +37,7 @@ end if;
 END;
 
 --creating fonction for getting film based on genre 
-create or replace function get_film (genre_id number) return sys_refcursor as
+create or replace function get_film_genre (genre_id number) return sys_refcursor as
 film_cursor sys_refcursor;
 BEGIN
 OPEN film_cursor FOR SELECT * FROM Film where genre_id = genre_id;
@@ -45,7 +45,7 @@ RETURN film_cursor;
 END;
 
 --creating fonction for getting serie based on genre
-create or replace function get_serie (genre_id number) return sys_refcursor as
+create or replace function get_serie_genre (genre_id number) return sys_refcursor as
 serie_cursor sys_refcursor;
 BEGIN
 OPEN serie_cursor FOR SELECT * FROM Serie where genre_id = genre_id;
@@ -54,7 +54,7 @@ END;
 
 
 --creating fonction for getting media based on name
-create or replace function get_media (media_name varchar2) return sys_refcursor as
+create or replace function get_media_name (media_name varchar2) return sys_refcursor as
 media_cursor sys_refcursor;
 media_id number;
 BEGIN
@@ -84,6 +84,10 @@ grant create session to P_NAME;
 grant execute on delete_user to P_NAME;
 grant execute on update_user to P_NAME;
 grant execute on get_user to P_NAME;
+grant execute on check_admin to P_NAME;
+grant execute on get_film_genre to P_NAME;
+grant execute on get_serie_genre to P_NAME;
+grant execute on get_media_name to P_NAME;
 commit;
 exception
 END; 
