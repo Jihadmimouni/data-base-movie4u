@@ -216,3 +216,7 @@ ALTER TABLE producer ADD CONSTRAINT unique_name_producer UNIQUE (name);
 
 --adding type field to media table
 ALTER TABLE media ADD type VARCHAR(255);
+
+
+--removing producer_id from serie
+ALTER TABLE serie DROP COLUMN producer_id;
