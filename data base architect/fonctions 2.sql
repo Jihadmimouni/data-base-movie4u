@@ -659,6 +659,7 @@ tmp_query := 'grant execute on get_serie to ' || P_NAME;
 EXECUTE IMMEDIATE tmp_query;
 commit;
 END;
+/
 
 --creating fonction for checking if user exist(used in login)
 create or replace function check_user (p_name in varchar2,p_password in varchar2) return number as
