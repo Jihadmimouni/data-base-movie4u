@@ -713,6 +713,8 @@ grant EXECUTE on insert_user to newuser;
 grant EXECUTE on check_user to newuser;
 grant EXECUTE on add_actor to newuser;
 grant EXECUTE on add_producer to newuser;
+GRANT EXECUTE on check_actor to newuser;
+GRANT EXECUTE on check_producer to newuser;
 grant create session to newuser;
 
 
