@@ -68,7 +68,7 @@ END;
 
 
 --creating fonction for searching media by actor
-create or replace function search_media_actor_p1 (actor_name varchar2) return sys_refcursor as
+create or replace function search_media_actor (actor_name varchar2) return sys_refcursor as
 actors_id number;
 media_id sys_refcursor;
 BEGIN
@@ -78,7 +78,7 @@ return media_id;
 END;
 
 
-create or replace function search_media_actor_p2 (media_id number) return sys_refcursor as
+create or replace function search_media_id (media_id number) return sys_refcursor as
 media_cursor sys_refcursor;
 BEGIN
 OPEN media_cursor FOR SELECT * FROM MEDIA where id = i.media_id;
