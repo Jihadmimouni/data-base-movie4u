@@ -4,8 +4,6 @@ create or replace PROCEDURE DELETE_USER (p_name in varchar2) as
 tmp_query varchar2(100);
 BEGIN
 DELETE FROM users WHERE name = p_name;
-tmp_query :='drop user '||p_name||' cascade';
-execute immediate tmp_query;
 commit;
 END;
 /
@@ -647,6 +645,30 @@ return user;
 END;
 /
 
+--creating fonction to return image by id
+create or replace function get_image (p_id in number) return SYS_REFCURSOR as
+image SYS_REFCURSOR;
+BEGIN
+OPEN image FOR SELECT * FROM image where id = p_id;
+return image;
+END;
+/
+
+--creating fonction to delete producer by id
+create or replace procedure delete_producer (p_id in number) as
+BEGIN
+DELETE FROM producer where id = p_id;
+commit;
+END;
+/
+
+--creating fonction to delete actor by id
+create or replace procedure delete_actor (p_id in number) as
+BEGIN
+DELETE FROM actor where id = p_id;
+commit;
+END;
+/
 
 
 
