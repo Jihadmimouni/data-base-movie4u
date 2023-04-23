@@ -21,7 +21,7 @@ def run_sqlplus(sqlplus_script):
     return stdout_lines
 
 script="""
-    connect SYSTEM/1234@localhost:1521/XE as sysdba
+    connect {user}/{password}@localhost:1521/XE as sysdba
     @"{path1}"
     connect movie4u/test1234@localhost:1521/XE
     @"{path2}"
@@ -29,7 +29,13 @@ script="""
     exit
 """
 
-print(run_sqlplus(script.format(path1=os.path.abspath("f1.sql"),path2=os.path.abspath("db.sql"),path3=os.path.abspath("f2.sql"))))
+output = run_sqlplus(script.format(user=input("give the username : "),password=input("give the password : "),path1=os.path.abspath("f1.sql"),path2=os.path.abspath("db.sql"),path3=os.path.abspath("f2.sql")))
 os.remove("f1.sql")
 os.remove("db.sql")
 os.remove("f2.sql")
+os.remove("log.txt")
+for line in output:
+    print(line)
+    with open("log.txt","a") as f:
+        f.write(str(line))
+
