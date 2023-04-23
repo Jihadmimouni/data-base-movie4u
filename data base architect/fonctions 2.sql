@@ -655,17 +655,17 @@ END;
 /
 
 --creating fonction to delete producer by id
-create or replace procedure delete_producer (p_id in number) as
+create or replace procedure delete_producer (p_name in varchar2) as
 BEGIN
-DELETE FROM producer where id = p_id;
+DELETE FROM producer where name = p_name;
 commit;
 END;
 /
 
 --creating fonction to delete actor by id
-create or replace procedure delete_actor (p_id in number) as
+create or replace procedure delete_actor (p_name in varchar2) as
 BEGIN
-DELETE FROM actor where id = p_id;
+DELETE FROM actor where name = p_name;
 commit;
 END;
 /
@@ -692,6 +692,30 @@ return actor;
 END;
 /
 
+
+--creating procedure for updating actor
+create or replace procedure update_actor (p_id in number,p_name in varchar2,p_email in varchar2,p_password in varchar2, p_birthdate in DATE, p_image BLOB) as
+im_id number;
+BEGIN
+SELECT max(id) INTO im_id from image ;
+IF im_id IS NULL THEN im_id := 0; END IF;
+INSERT INTO image (id, image) values (im_id + 1, p_image);
+UPDATE actor SET name = p_name, email = p_email, password = p_password, birthdate = p_birthdate, image_id = im_id + 1 where id = p_id;
+commit;
+END;
+/
+
+--creating procedure for updating producer
+create or replace procedure update_producer (p_id in number,p_name in varchar2,p_email in varchar2,p_password in varchar2, p_birthdate in DATE, p_image BLOB) as
+im_id number;
+BEGIN
+SELECT max(id) INTO im_id from image ;
+IF im_id IS NULL THEN im_id := 0; END IF;
+INSERT INTO image (id, image) values (im_id + 1, p_image);
+UPDATE producer SET name = p_name, email = p_email, password = p_password, birthdate = p_birthdate, image_id = im_id + 1 where id = p_id;
+commit;
+END;
+/
 
 
 
