@@ -256,8 +256,8 @@ commit;
 END;
 /
 
---creating procedure for adding saison
-create or replace procedure add_saison (p_serie_id in number, p_name in varchar, p_language in varchar,p_synopsis_text in VARCHAR, p_synopsis_video in BLOB, p_image BLOB, p_producer_id in number,p_country in varchar,air_time date) as
+--creating procedure for adding season
+create or replace procedure  add_season (p_serie_id in number, p_name in varchar, p_language in varchar,p_synopsis_text in VARCHAR, p_synopsis_video in BLOB, p_image BLOB, p_producer_id in number,p_country in varchar,air_time date) as
 saison_id number;
 MEDIA_ID number;
 SYNOPSIS_ID number;
@@ -502,9 +502,22 @@ commit;
 end;
 /
 
-
-  
-
+--creating fonction for getting all comments on media by producer
+create or replace function get_comments_by_media_id (medias_id NUMBER) return SYS_REFCURSOR as
+cmnt sys_refcursor
+BEGIN
+open cmnt for SELECT * FROM COMMENTS where MEDIA_ID = medias_id;
+return cmnt;
+end;
+/
+--creating fonction that return average of rating of a media
+create or replace function get_average_rating (medias_id NUMBER) return NUMBER as
+avg_rating NUMBER;
+BEGIN
+SELECT avg(rating) INTO avg_rating FROM RATING where MEDIA_ID = medias_id;
+return avg_rating;
+end;
+/ 
 
 
 --creating procedure for adding actor
@@ -544,6 +557,18 @@ EXECUTE IMMEDIATE tmp_query;
 tmp_query := 'grant create session to ' ||P_NAME;
 EXECUTE IMMEDIATE tmp_query;
 tmp_query := 'grant execute on add_serie to ' ||P_NAME;
+EXECUTE IMMEDIATE tmp_query;
+tmp_query := 'grant execute on add_film to ' ||P_NAME;
+EXECUTE IMMEDIATE tmp_query;
+tmp_query := 'grant execute on add_season to ' ||P_NAME;
+EXECUTE IMMEDIATE tmp_query;
+tmp_query := 'grant execute on add_episode to ' ||P_NAME;
+EXECUTE IMMEDIATE tmp_query;
+tmp_query := 'grant execute on get_average_rating to ' ||P_NAME;
+EXECUTE IMMEDIATE tmp_query;
+tmp_query := 'grant execute on get_comments_by_media_id to ' ||P_NAME;
+EXECUTE IMMEDIATE tmp_query;
+tmp_query := 'grant execute on get_media_producer to' || P_NAME;
 EXECUTE IMMEDIATE tmp_query;
 commit;
 END;
@@ -626,6 +651,8 @@ END;
 create user newuser IDENTIFIED BY 1234;
 grant EXECUTE on insert_user to newuser;
 grant EXECUTE on check_user to newuser;
+grant EXECUTE on add_actor to newuser;
+grant EXECUTE on add_producer to newuser;
 grant create session to newuser;
 
 
