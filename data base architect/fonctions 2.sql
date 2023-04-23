@@ -68,26 +68,21 @@ END;
 
 
 --creating fonction for searching media by actor
-create or replace function search_media_actor (actor_name varchar2) return t_media as
-media_cursor sys_refcursor;
+create or replace function search_media_actor_p1 (actor_name varchar2) return sys_refcursor as
 actors_id number;
 media_id sys_refcursor;
- TYPE t_media
-        IS TABLE OF media%ROWTYPE
-        INDEX BY NUMBER;
-Ind number;
 BEGIN
-ind:=0;
 select id into actor_id from actor where name = actor_name;
 open media_id for select media_id from ROLE where actor_id = actors_id;
-for i in media_id loop
+return media_id;
+END;
+
+
+create or replace function search_media_actor_p2 (media_id number) return sys_refcursor as
+media_cursor sys_refcursor;
+BEGIN
 OPEN media_cursor FOR SELECT * FROM MEDIA where id = i.media_id;
-for K in media_cursor loop
-ind:=ind+1;
-media(ind):=k;
-end loop;
-end loop;
-return media;
+RETURN media_cursor;
 END;
 
 
