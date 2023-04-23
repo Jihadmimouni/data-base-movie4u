@@ -1,9 +1,11 @@
 alter session set "_ORACLE_SCRIPT"=true;  
 /
 create or replace PROCEDURE DELETE_USER (p_name in varchar2) as
+tmp_query varchar2(100);
 BEGIN
-DELETE FROM users WHERE name = p_name;-
-EXECUTE IMfilmTE ('drop user '||p_name||' cascade');
+DELETE FROM users WHERE name = p_name;
+tmp_query :='drop user '||p_name||' cascade';
+execute immediate tmp_query;
 commit;
 END;
 /
@@ -58,7 +60,7 @@ END;
 create or replace function get_media_name (media_name varchar2) return sys_refcursor as
 media_cursor sys_refcursor;
 BEGIN
-open media_cursor select * from media where name = media_name;
+open media_cursor FOR select * from media where name = media_name;
 RETURN media_cursor;
 END;
 
@@ -77,7 +79,7 @@ END;
 create or replace function get_media_id (media_id number) return sys_refcursor as
 media_cursor sys_refcursor;
 BEGIN
-OPEN media_cursor FOR SELECT * FROM MEDIA where id = i.media_id;
+OPEN media_cursor FOR SELECT * FROM MEDIA where id = media_id;
 RETURN media_cursor;
 END;
 /
@@ -116,7 +118,7 @@ comment_id number;
 BEGIN
 SELECT max(id) INTO comment_id from comments ;
 IF comment_id IS NULL THEN comment_id := 0; END IF;
-INSERT INTO comments (id, user_id, media_id, comment) values (comment_id + 1, p_user_id, p_media_id, p_comment);
+INSERT INTO comments (id, users_id, media_id, COMMENTS) values (comment_id + 1, p_user_id, p_media_id, p_comment);
 commit;
 END;
 /
@@ -504,7 +506,7 @@ end;
 
 --creating fonction for getting all comments on media by producer
 create or replace function get_comments_by_media_id (medias_id NUMBER) return SYS_REFCURSOR as
-cmnt sys_refcursor
+cmnt sys_refcursor;
 BEGIN
 open cmnt for SELECT * FROM COMMENTS where MEDIA_ID = medias_id;
 return cmnt;
@@ -514,13 +516,13 @@ end;
 create or replace function get_average_rating (medias_id NUMBER) return NUMBER as
 avg_rating NUMBER;
 BEGIN
-SELECT avg(rating) INTO avg_rating FROM RATING where MEDIA_ID = medias_id;
+SELECT avg(SCORE) INTO avg_rating FROM RATING where MEDIA_ID = medias_id;
 return avg_rating;
 end;
 / 
 
 --creating procedure that add actor and role to role table
-create or replace procedure add_actor_to_role (p_actor_name in VARCHAR, p_role VARCHAR,MEDIA_ID) as
+create or replace procedure add_actor_to_role (p_actor_name in VARCHAR, p_role VARCHAR,MEDIA_ID NUMBER) as
 actor_id number;
 role_id number;
 BEGIN
@@ -531,7 +533,7 @@ INSERT INTO ROLE(
     ID,
     ACTOR_ID,
     MEDIA_ID,
-    ROLE
+    name
   )
 VALUES
   (
@@ -547,7 +549,7 @@ end;
 
 
 --creating procedure for adding actor
-create or replace procedure add_actor (p_name in varchar2, p_birthdate in DATE, p_image BLOB) as
+create or replace procedure add_actor (p_name in varchar2,p_email VARCHAR2,p_password in VARCHAR2, p_birthdate in DATE, p_image BLOB) as
 actor_id number;
 im_id number;
 tmp_query varchar(150);
@@ -557,7 +559,7 @@ SELECT max(id) INTO im_id from image ;
 IF actor_id IS NULL THEN actor_id := 0; END IF;
 IF im_id IS NULL THEN im_id := 0; END IF;
 INSERT INTO image (id, image) values (im_id + 1, p_image);
-INSERT INTO actor (id, name, birthdate, image_id) values (actor_id + 1, p_name, p_birthdate, im_id + 1);
+INSERT INTO actor (id, name, birthdate,EMAIL,PASSWORD , image_id) values (actor_id + 1, p_name, p_birthdate,p_email,p_password, im_id + 1);
 tmp_query := 'CREATE' || User  || ' P_NAME IDENTIFIED BY ' || P_PASSWORD ;
 EXECUTE IMMEDIATE tmp_query;
 tmp_query := 'grant create session to ' ||P_NAME;
@@ -573,7 +575,7 @@ END;
 /
 
 --creating procedure for adding producer
-create or replace procedure add_producer (p_name in varchar2, p_birthdate in DATE, p_image BLOB) as
+create or replace procedure add_producer (p_name in varchar2,p_email VARCHAR2,p_password in VARCHAR2, p_birthdate in DATE, p_image BLOB) as
 producer_id number;
 im_id number;
 tmp_query varchar(150);
@@ -583,7 +585,7 @@ SELECT max(id) INTO im_id from image ;
 IF producer_id IS NULL THEN producer_id := 0; END IF;
 IF im_id IS NULL THEN im_id := 0; END IF;
 INSERT INTO image (id, image) values (im_id + 1, p_image);
-INSERT INTO producer (id, name, birthdate, image_id) values (producer_id + 1, p_name, p_birthdate, im_id + 1);
+INSERT INTO producer (id, name, birthdate,EMAIL,PASSWORD ,image_id) values (producer_id + 1, p_name, p_birthdate,p_email,p_password, im_id + 1);
 tmp_query := 'CREATE' || User  || ' P_NAME IDENTIFIED BY ' || P_PASSWORD ;
 EXECUTE IMMEDIATE tmp_query;
 tmp_query := 'grant create session to ' ||P_NAME;
@@ -672,7 +674,31 @@ end if;
 END;
 /
 
+--creating fonction for checking if actor exist(used in login)
+create or replace function check_actor (p_name in varchar2,p_password in varchar2) return number as
+actor_id number;
+BEGIN
+SELECT id INTO actor_id from actor where name = p_name and password = p_password;
+if actor_id is null then
+return 0;
+else
+return 1;
+end if;
+END;
+/
 
+--creating fonction for checking if producer exist(used in login)
+create or replace function check_producer (p_name in varchar2,p_password in varchar2) return number as
+producer_id number;
+BEGIN
+SELECT id INTO producer_id from producer where name = p_name and password = p_password;
+if producer_id is null then
+return 0;
+else
+return 1;
+end if;
+END;
+/
 
 
 
