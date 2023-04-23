@@ -670,6 +670,28 @@ commit;
 END;
 /
 
+--creating fonction to get producer by name and password
+create or replace function get_producer_log (p_name in varchar2,p_password in varchar2) return SYS_REFCURSOR as
+producer_id number;
+producer SYS_REFCURSOR;
+BEGIN
+SELECT id INTO producer_id from producer where name = p_name and password = p_password;
+OPEN producer FOR SELECT * FROM producer where id = producer_id;
+return producer;
+END;
+/
+
+--creating fonction to get actor by name and password
+create or replace function get_actor_log (p_name in varchar2,p_password in varchar2) return SYS_REFCURSOR as
+actor_id number;
+actor SYS_REFCURSOR;
+BEGIN
+SELECT id INTO actor_id from actor where name = p_name and password = p_password;
+OPEN actor FOR SELECT * FROM actor where id = actor_id;
+return actor;
+END;
+/
+
 
 
 
