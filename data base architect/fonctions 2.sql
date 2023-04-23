@@ -636,8 +636,16 @@ end if;
 END;
 /
 
-
-
+--creating fonction to get user by name and password
+create or replace function get_user_log (p_name in varchar2,p_password in varchar2) return SYS_REFCURSOR as
+user_id number;
+user SYS_REFCURSOR;
+BEGIN
+SELECT id INTO user_id from users where name = p_name and password = p_password;
+OPEN user FOR SELECT * FROM users where id = user_id;
+return user;
+END;
+/
 
 
 
@@ -645,6 +653,7 @@ END;
 
 --creating new user for inserting when first login
 create user newuser IDENTIFIED BY 1234;
+grant EXECUTE on get_user_log to newuser;
 grant EXECUTE on insert_user to newuser;
 grant EXECUTE on check_user to newuser;
 grant EXECUTE on add_actor to newuser;
