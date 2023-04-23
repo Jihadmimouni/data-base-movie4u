@@ -519,6 +519,32 @@ return avg_rating;
 end;
 / 
 
+--creating procedure that add actor and role to role table
+create or replace procedure add_actor_to_role (p_actor_name in VARCHAR, p_role VARCHAR,MEDIA_ID) as
+actor_id number;
+role_id number;
+BEGIN
+SELECT id INTO actor_id from actor where name = p_actor_name;
+SELECT max(id) INTO role_id from role ;
+IF role_id IS NULL THEN role_id := 0; END IF;
+INSERT INTO ROLE(
+    ID,
+    ACTOR_ID,
+    MEDIA_ID,
+    ROLE
+  )
+VALUES
+  (
+    role_id + 1,
+    actor_id,
+    MEDIA_ID,
+    p_role
+  );
+commit;
+end;
+/
+
+
 
 --creating procedure for adding actor
 create or replace procedure add_actor (p_name in varchar2, p_birthdate in DATE, p_image BLOB) as
@@ -535,6 +561,12 @@ INSERT INTO actor (id, name, birthdate, image_id) values (actor_id + 1, p_name, 
 tmp_query := 'CREATE' || User  || ' P_NAME IDENTIFIED BY ' || P_PASSWORD ;
 EXECUTE IMMEDIATE tmp_query;
 tmp_query := 'grant create session to ' ||P_NAME;
+EXECUTE IMMEDIATE tmp_query;
+tmp_query := 'grant execute on get_average_rating to ' ||P_NAME;
+EXECUTE IMMEDIATE tmp_query;
+tmp_query := 'grant execute on get_comments_by_media_id to ' ||P_NAME;
+EXECUTE IMMEDIATE tmp_query;
+tmp_query := 'grant execute on get_media_actor to' || P_NAME;
 EXECUTE IMMEDIATE tmp_query;
 commit;
 END;
@@ -569,6 +601,8 @@ EXECUTE IMMEDIATE tmp_query;
 tmp_query := 'grant execute on get_comments_by_media_id to ' ||P_NAME;
 EXECUTE IMMEDIATE tmp_query;
 tmp_query := 'grant execute on get_media_producer to' || P_NAME;
+EXECUTE IMMEDIATE tmp_query;
+tmp_query := 'grant execute on add_actor_to_role to' || P_NAME;
 EXECUTE IMMEDIATE tmp_query;
 commit;
 END;
