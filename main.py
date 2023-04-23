@@ -33,7 +33,10 @@ output = run_sqlplus(script.format(user=input("give the username : "),password=i
 os.remove("f1.sql")
 os.remove("db.sql")
 os.remove("f2.sql")
-os.remove("log.txt")
+try:
+    os.remove("log.txt")
+except:
+    pass
 for line in output:
     print(line)
     with open("log.txt","a") as f:
