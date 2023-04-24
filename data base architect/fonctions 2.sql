@@ -754,6 +754,16 @@ grant execute on add_actor_to_role TO newuser;
 grant execute on get_average_rating to newuser;
 grant execute on get_comments_by_media_id to newuser;
 grant execute on get_media_actor to newuser;
+grant execute on get_media_id to newuser;
+grant execute on update_producer to newuser;
+grant execute on update_actor to newuser;
+grant execute on delete_actor to newuser;
+grant execute on delete_producer to newuser;
+grant execute on get_actor_log to newuser;
+grant execute on get_producer_log to newuser;
+grant execute on get_image to newuser;
+grant execute on get_media_name to newuser;
+
 grant create session to newuser;
 
 
