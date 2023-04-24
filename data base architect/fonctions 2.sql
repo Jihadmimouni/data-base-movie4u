@@ -723,7 +723,7 @@ BEGIN
 OPEN synopsis FOR SELECT * FROM synopsis where id = p_id;
 return synopsis;
 END;
-
+/
 --creating fonction to get video by id
 create or replace function get_video (p_id in number) return SYS_REFCURSOR as
 video SYS_REFCURSOR;
@@ -731,6 +731,18 @@ BEGIN
 OPEN video FOR SELECT * FROM video where id = p_id;
 return video;
 END;
+/
+
+--creating fonction to get Genre by id
+create or replace function get_genre (p_id in number) return SYS_REFCURSOR as
+genre SYS_REFCURSOR;
+BEGIN
+OPEN genre FOR SELECT * FROM genre where id = p_id;
+return genre;
+END;
+/
+
+
 
 --creating new user for inserting when first login
 create user newuser IDENTIFIED BY 1234;
@@ -778,7 +790,7 @@ grant execute on get_image to newuser;
 grant execute on get_media_name to newuser;
 grant execute on get_synopsis to newuser;
 grant execute on get_video to newuser;
-
+grant execute on get_genre to newuser;
 grant create session to newuser;
 
 
