@@ -220,3 +220,9 @@ ALTER TABLE media ADD type VARCHAR(255);
 
 --removing producer_id from serie
 ALTER TABLE serie DROP COLUMN producer_id;
+
+
+
+
+--adding istext field to synopsis table
+ALTER TABLE synopsis ADD isText BOOLEAN;

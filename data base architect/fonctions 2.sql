@@ -716,8 +716,21 @@ UPDATE producer SET name = p_name, email = p_email, password = p_password, birth
 commit;
 END;
 /
+--creating fonction to get Synopsis by id
+create or replace function get_synopsis (p_id in number) return SYS_REFCURSOR as
+synopsis SYS_REFCURSOR;
+BEGIN
+OPEN synopsis FOR SELECT * FROM synopsis where id = p_id;
+return synopsis;
+END;
 
-
+--creating fonction to get video by id
+create or replace function get_video (p_id in number) return SYS_REFCURSOR as
+video SYS_REFCURSOR;
+BEGIN
+OPEN video FOR SELECT * FROM video where id = p_id;
+return video;
+END;
 
 --creating new user for inserting when first login
 create user newuser IDENTIFIED BY 1234;
@@ -763,6 +776,8 @@ grant execute on get_actor_log to newuser;
 grant execute on get_producer_log to newuser;
 grant execute on get_image to newuser;
 grant execute on get_media_name to newuser;
+grant execute on get_synopsis to newuser;
+grant execute on get_video to newuser;
 
 grant create session to newuser;
 
