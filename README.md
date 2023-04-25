@@ -18,6 +18,7 @@ If you still encounter any problems, you can manually run the SQL scripts in the
 3. Run `database.sql`
 4. Run `fonction2.sql`
 
+**Please note that you need Oracle XE with SQLPlus enabled to run the script.**
 ## Tested Platforms
 
 This project has been tested on Oracle XE 21. 
