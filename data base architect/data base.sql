@@ -230,3 +230,11 @@ ALTER TABLE synopsis ADD isText VARCHAR2(255);
 
 --adding numero field to episode table
 ALTER TABLE episode ADD numero INTEGER;
+
+
+--removing view from media table
+ALTER TABLE media DROP COLUMN view_count;
+
+--adding view field to video table
+ALTER TABLE video ADD view_count number;
+

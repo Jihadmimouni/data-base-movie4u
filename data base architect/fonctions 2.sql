@@ -232,12 +232,14 @@ INSERT INTO MEDIA(
 );
 INSERT INTO VIDEO(
     ID,
-    VIDEO
+    VIDEO,
+    view_count
   )
 VALUES
   (
     VIDEO_ID + 1,
-    p_synopsis_video
+    p_synopsis_video,
+    0
   );
 
 INSERT INTO SYNOPSIS(
@@ -299,12 +301,14 @@ INSERT INTO MEDIA(
 );
 INSERT INTO VIDEO(
     ID,
-    VIDEO
+    VIDEO,
+    view_count
   )
 VALUES
   (
     VIDEO_ID + 1,
-    p_synopsis_video
+    p_synopsis_video,
+    0
   );
 INSERT INTO SYNOPSIS(
     ID,
@@ -365,12 +369,14 @@ INSERT INTO MEDIA(
 );
 INSERT INTO VIDEO(
     ID,
-    VIDEO
+    VIDEO,
+    view_count
   )
 VALUES
   (
     VIDEO_ID + 1,
-    p_synopsis_video
+    p_synopsis_video,
+    0
   );
 INSERT INTO SYNOPSIS(
     ID,
@@ -389,12 +395,14 @@ SELECT max(numero) INTO numeros from episode where season_id = p_saison_id;
 IF numeros IS NULL THEN numeros := 0; END IF;
 INSERT INTO VIDEO(
     ID,
-    VIDEO
+    VIDEO,
+    view_count
   )
 VALUES
   (
     VIDEO_ID + 2,
-    p_video
+    p_video,
+    0
   );
 
 INSERT INTO EPISODE(
@@ -462,12 +470,14 @@ INSERT INTO MEDIA(
 );
 INSERT INTO VIDEO(
     ID,
-    VIDEO
+    VIDEO,
+    view_count
   )
 VALUES
   (
     VIDEO_ID + 1,
-    p_synopsis_video
+    p_synopsis_video,
+    0
   );
 INSERT INTO SYNOPSIS(
     ID,
@@ -484,12 +494,14 @@ VALUES
   );
 INSERT INTO VIDEO(
     ID,
-    VIDEO
+    VIDEO,
+    view_count
   )
 VALUES
   (
     VIDEO_ID + 2,
-    p_video
+    p_video,
+    0
   );
 INSERT INTO FILM(
     ID,
@@ -739,6 +751,7 @@ create or replace function get_video (p_id in number) return SYS_REFCURSOR as
 video SYS_REFCURSOR;
 BEGIN
 OPEN video FOR SELECT * FROM video where id = p_id;
+UPDATE video SET view_count = view_count + 1 where id = p_id;
 return video;
 END;
 /
