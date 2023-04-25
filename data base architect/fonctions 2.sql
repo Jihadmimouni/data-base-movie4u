@@ -13,7 +13,7 @@ not_id number;
 BEGIN
 SELECT max(id) INTO not_id from notification ;
 IF not_id IS NULL THEN not_id := 0; END IF;
-INSERT INTO notification (id,media_id, user_id , MESSAGE) values (not_id+1,m_id,p_id, msg);
+INSERT INTO notification (id,media_id, users_id , MESSAGE) values (not_id+1,m_id,p_id, msg);
 commit;
 END;
 /
@@ -438,9 +438,9 @@ VALUES
     SYNOPSIS_ID + 1,
     numeros+1
   );
-  for i in select * from favorite where media_id = (select serie_id from season where id=p_saison_id)
+  for i in (select * from favorite where media_id = (select serie_id from season where id=p_saison_id))
   loop
-  EXECUTE movie4u.add_notification (i.users_id,MEDIA_ID +1,'new episode');
+  add_notification (i.users_id,MEDIA_ID +1,'new episode');
   end loop;
 commit;
 end;
@@ -818,6 +818,15 @@ media_name varchar2(100);
 BEGIN
 SELECT name INTO media_name from media where id = p_id;
 return media_name;
+END;
+/
+
+--creating fonction to get notificaton by user_id
+create or replace function get_notification (p_id in number) return SYS_REFCURSOR as
+notification SYS_REFCURSOR;
+BEGIN
+OPEN notification FOR SELECT * FROM notification where user_id = p_id;
+return notification;
 END;
 /
 
