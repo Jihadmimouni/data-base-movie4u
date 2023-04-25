@@ -130,10 +130,10 @@ END;
 /
 
 --creating fonction for getting comment by media id
-create or replace function get_comment (media_id number) return sys_refcursor as
+create or replace function get_comment (p_id number,media_id number) return sys_refcursor as
 comment_cursor sys_refcursor;
 BEGIN
-OPEN comment_cursor FOR SELECT * FROM comments where media_id = media_id;
+OPEN comment_cursor FOR SELECT * FROM comments where media_id = media_id AND users_id = p_id;
 RETURN comment_cursor;
 END;
 /
@@ -828,7 +828,6 @@ grant execute on get_comments_by_media_id TO newuser;
 grant execute on get_media_producer TO newuser;
 grant execute on add_actor_to_role TO newuser;
 grant execute on get_average_rating to newuser;
-grant execute on get_comments_by_media_id to newuser;
 grant execute on get_media_actor to newuser;
 grant execute on get_media_id to newuser;
 grant execute on update_producer to newuser;
