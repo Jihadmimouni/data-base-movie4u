@@ -193,7 +193,7 @@ END;
 
 
 --creating procedure for adding serie
-create or replace procedure add_serie (p_name in varchar, p_release_date in NUMBER, p_language in varchar,p_synopsis_text in VARCHAR, p_synopsis_video in BLOB, p_image BLOB, p_producer_id in number,p_country in varchar,p_genre_id in number) as
+create or replace procedure add_serie (p_name in varchar, p_release_date in NUMBER, p_language in varchar,p_synopsis_text in VARCHAR, p_synopsis_video in BLOB, p_image BLOB, p_producer_id in number,p_country in varchar,p_genre_id in number,istexts BOOLEAN) as
 serie_id number;
 MEDIA_ID number;
 SYNOPSIS_ID number;
@@ -243,13 +243,15 @@ VALUES
 INSERT INTO SYNOPSIS(
     ID,
     TEXT,
-    VIDEO_ID
+    VIDEO_ID,
+    istext
   )
 VALUES
   (
     SYNOPSIS_ID + 1,
     p_synopsis_text,
-    VIDEO_ID + 1
+    VIDEO_ID + 1,
+    istexts
   );
 INSERT INTO serie (id, media_id, synopsis_id, genre_id) values (serie_id + 1, MEDIA_ID + 1, SYNOPSIS_ID + 1, p_genre_id);
 commit;
@@ -257,7 +259,7 @@ END;
 /
 
 --creating procedure for adding season
-create or replace procedure  add_season (p_serie_id in number, p_name in varchar, p_language in varchar,p_synopsis_text in VARCHAR, p_synopsis_video in BLOB, p_image BLOB, p_producer_id in number,p_country in varchar,air_time date) as
+create or replace procedure  add_season (p_serie_id in number, p_name in varchar, p_language in varchar,p_synopsis_text in VARCHAR, p_synopsis_video in BLOB, p_image BLOB, p_producer_id in number,p_country in varchar,air_time date,istext BOOLEAN) as
 saison_id number;
 MEDIA_ID number;
 SYNOPSIS_ID number;
@@ -307,13 +309,15 @@ VALUES
 INSERT INTO SYNOPSIS(
     ID,
     TEXT,
-    VIDEO_ID
+    VIDEO_ID,
+    istext
   )
 VALUES
   (
     SYNOPSIS_ID + 1,
     p_synopsis_text,
-    VIDEO_ID + 1
+    VIDEO_ID + 1,
+    istexts
   );
 SELECT max(numero) INTO numero from season where serie_id = p_serie_id;
 INSERT INTO season (id, media_id, synopsis_id, serie_id, START_DATE,NUMERO) values (saison_id + 1, MEDIA_ID + 1, SYNOPSIS_ID + 1, p_serie_id,air_time,numero+1);
@@ -321,7 +325,7 @@ commit;
 END;
 /
 --creating procedure for adding episode
-create or replace procedure add_episode (p_saison_id in number, p_name in varchar, p_language in varchar,p_synopsis_text in VARCHAR, p_synopsis_video in BLOB, p_image BLOB, p_producer_id in number,p_country in varchar,air_time date,p_video BLOB) as
+create or replace procedure add_episode (p_saison_id in number, p_name in varchar, p_language in varchar,p_synopsis_text in VARCHAR, p_synopsis_video in BLOB, p_image BLOB, p_producer_id in number,p_country in varchar,air_time date,p_video BLOB,istexts BOOLEAN) as
 episode_id number;
 MEDIA_ID number;
 SYNOPSIS_ID number;
@@ -371,13 +375,15 @@ VALUES
 INSERT INTO SYNOPSIS(
     ID,
     TEXT,
-    VIDEO_ID
+    VIDEO_ID,
+    istext
   )
 VALUES
   (
     SYNOPSIS_ID + 1,
     p_synopsis_text,
-    VIDEO_ID + 1
+    VIDEO_ID + 1,
+    istexts
   );
 SELECT max(numero) INTO numero from episode where season_id = p_saison_id;
 IF numero IS NULL THEN numero := 0; END IF;
@@ -744,6 +750,36 @@ return genre;
 END;
 /
 
+--creating fonction to get id of genre by name if not exist insert it and return id
+create or replace function get_genre_id (p_name in varchar2) return number as
+genre_id number;
+BEGIN
+SELECT id INTO genre_id from genre where name = p_name;
+if genre_id is null then
+INSERT INTO genre (name) values (p_name);
+SELECT id INTO genre_id from genre where name = p_name;
+return genre_id;
+else
+return genre_id;
+end if;
+END;
+/
+--creating fonction to get season by series_id
+create or replace function get_season (p_id in number) return SYS_REFCURSOR as
+season SYS_REFCURSOR;
+BEGIN
+OPEN season FOR SELECT * FROM season where serie_id = p_id;
+return season;
+END;
+/
+--creating fonction to get episode by season_id
+create or replace function get_episode (p_id in number) return SYS_REFCURSOR as
+episode SYS_REFCURSOR;
+BEGIN
+OPEN episode FOR SELECT * FROM episode where season_id = p_id;
+return episode;
+END;
+/
 
 
 --creating new user for inserting when first login
@@ -789,11 +825,12 @@ grant execute on delete_producer to newuser;
 grant execute on get_actor_log to newuser;
 grant execute on get_producer_log to newuser;
 grant execute on get_image to newuser;
-grant execute on get_media_name to newuser;
 grant execute on get_synopsis to newuser;
 grant execute on get_video to newuser;
 grant execute on get_genre to newuser;
 grant execute on add_favorite to newuser;
+grant execute on get_favorite to newuser;
+grant execute on get_genre_id to newuser;
 grant create session to newuser;
 
 
