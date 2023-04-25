@@ -7,6 +7,18 @@ DELETE FROM users WHERE name = p_name;
 commit;
 END;
 /
+--creating fonction to add notification when media is added
+create or replace procedure add_notification (p_id in number,m_id in number,msg VARCHAR2) as
+not_id number;
+BEGIN
+SELECT max(id) INTO not_id from notification ;
+IF not_id IS NULL THEN not_id := 0; END IF;
+INSERT INTO notification (id,media_id, user_id , MESSAGE) values (not_id+1,m_id,p_id, msg);
+commit;
+END;
+/
+
+
 --creating procedure for updating user info
 create or replace PROCEDURE UPDATE_USER (user_id number ,p_name in varchar2, p_email in varchar2, p_password in varchar2 , p_birthdate in DATE,p_image BLOB) as
 im_id number;
@@ -426,6 +438,10 @@ VALUES
     SYNOPSIS_ID + 1,
     numeros+1
   );
+  for i in select * from favorite where media_id = (select serie_id from season where id=p_saison_id)
+  loop
+  EXECUTE movie4u.add_notification (i.users_id,MEDIA_ID +1,'new episode');
+  end loop;
 commit;
 end;
 /
@@ -854,7 +870,7 @@ grant execute on get_favorite to newuser;
 grant execute on get_genre_id to newuser;
 grant execute on get_media_name_id to newuser;
 grant create session to newuser;
-
+grant EXECUTE on add_notification to newuser;
 
 
 
