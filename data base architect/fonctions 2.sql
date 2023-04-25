@@ -796,6 +796,13 @@ return episode;
 END;
 /
 
+--creating fonction to get media name by id
+create or replace function get_media_name_id (p_id in number) return varchar2 as
+media_name varchar2(100);
+BEGIN
+SELECT name INTO media_name from media where id = p_id;
+return media_name;
+END;
 
 --creating new user for inserting when first login
 create user newuser IDENTIFIED BY 1234;
@@ -843,6 +850,7 @@ grant execute on get_genre to newuser;
 grant execute on add_favorite to newuser;
 grant execute on get_favorite to newuser;
 grant execute on get_genre_id to newuser;
+grant execute on get_media_name_id to newuser;
 grant create session to newuser;
 
 
