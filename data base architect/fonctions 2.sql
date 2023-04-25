@@ -825,10 +825,12 @@ END;
 create or replace function get_notification (p_id in number) return SYS_REFCURSOR as
 notification SYS_REFCURSOR;
 BEGIN
-OPEN notification FOR SELECT * FROM notification where user_id = p_id;
+OPEN notification FOR SELECT * FROM notification where users_id = p_id;
 return notification;
 END;
 /
+
+
 
 
 --creating new user for inserting when first login
