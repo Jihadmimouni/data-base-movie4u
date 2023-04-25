@@ -803,6 +803,8 @@ BEGIN
 SELECT name INTO media_name from media where id = p_id;
 return media_name;
 END;
+/
+
 
 --creating new user for inserting when first login
 create user newuser IDENTIFIED BY 1234;
