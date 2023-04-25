@@ -881,7 +881,7 @@ grant execute on get_favorite to newuser;
 grant execute on get_genre_id to newuser;
 grant execute on get_media_name_id to newuser;
 grant create session to newuser;
-grant EXECUTE on add_notification to newuser;
+grant EXECUTE on get_notification to newuser;
 
 
 

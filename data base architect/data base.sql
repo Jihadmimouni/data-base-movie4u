@@ -201,12 +201,12 @@ ALTER TABLE producer ADD CONSTRAINT fk_producer_image FOREIGN KEY (image_id) REF
 ALTER TABLE actor ADD image_id INTEGER;
 ALTER TABLE actor ADD CONSTRAINT fk_actor_image FOREIGN KEY (image_id) REFERENCES image(id) ON DELETE SET NULL;
 
---adding view count to media table
+-- adding view count to media table
 ALTER TABLE media ADD view_count INTEGER DEFAULT 0;
 
 
 
---adding unique name constraint to users,actor and producer table
+-- adding unique name constraint to users,actor and producer table
 ALTER TABLE users ADD CONSTRAINT unique_name_user UNIQUE (name);
 ALTER TABLE actor ADD CONSTRAINT unique_name_actor UNIQUE (name);
 ALTER TABLE producer ADD CONSTRAINT unique_name_producer UNIQUE (name);
@@ -214,27 +214,27 @@ ALTER TABLE producer ADD CONSTRAINT unique_name_producer UNIQUE (name);
 
 
 
---adding type field to media table
+-- adding type field to media table
 ALTER TABLE media ADD type VARCHAR(255);
 
 
---removing producer_id from serie
+-- removing producer_id from serie
 ALTER TABLE serie DROP COLUMN producer_id;
 
 
 
 
---adding istext field to synopsis table
+-- adding istext field to synopsis table
 ALTER TABLE synopsis ADD isText VARCHAR2(255);
 
 
---adding numero field to episode table
+-- adding numero field to episode table
 ALTER TABLE episode ADD numero INTEGER;
 
 
---removing view from media table
+-- removing view from media table
 ALTER TABLE media DROP COLUMN view_count;
 
---adding view field to video table
+-- adding view field to video table
 ALTER TABLE video ADD view_count number;
 
