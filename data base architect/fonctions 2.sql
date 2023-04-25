@@ -193,7 +193,7 @@ END;
 
 
 --creating procedure for adding serie
-create or replace procedure add_serie (p_name in varchar, p_release_date in NUMBER, p_language in varchar,p_synopsis_text in VARCHAR, p_synopsis_video in BLOB, p_image BLOB, p_producer_id in number,p_country in varchar,p_genre_id in number,istexts BOOLEAN) as
+create or replace procedure add_serie (p_name in varchar, p_release_date in NUMBER, p_language in varchar,p_synopsis_text in VARCHAR, p_synopsis_video in BLOB, p_image BLOB, p_producer_id in number,p_country in varchar,p_genre_id in number,istexts VARCHAR2) as
 serie_id number;
 MEDIA_ID number;
 SYNOPSIS_ID number;
@@ -259,7 +259,7 @@ END;
 /
 
 --creating procedure for adding season
-create or replace procedure  add_season (p_serie_id in number, p_name in varchar, p_language in varchar,p_synopsis_text in VARCHAR, p_synopsis_video in BLOB, p_image BLOB, p_producer_id in number,p_country in varchar,air_time date,istext BOOLEAN) as
+create or replace procedure  add_season (p_serie_id in number, p_name in varchar, p_language in varchar,p_synopsis_text in VARCHAR, p_synopsis_video in BLOB, p_image BLOB, p_producer_id in number,p_country in varchar,air_time date,istexts VARCHAR2) as
 saison_id number;
 MEDIA_ID number;
 SYNOPSIS_ID number;
@@ -325,13 +325,13 @@ commit;
 END;
 /
 --creating procedure for adding episode
-create or replace procedure add_episode (p_saison_id in number, p_name in varchar, p_language in varchar,p_synopsis_text in VARCHAR, p_synopsis_video in BLOB, p_image BLOB, p_producer_id in number,p_country in varchar,air_time date,p_video BLOB,istexts BOOLEAN) as
+create or replace procedure add_episode (p_saison_id in number, p_name in varchar, p_language in varchar,p_synopsis_text in VARCHAR, p_synopsis_video in BLOB, p_image BLOB, p_producer_id in number,p_country in varchar,air_time date,p_video BLOB,istexts VARCHAR2) as
 episode_id number;
 MEDIA_ID number;
 SYNOPSIS_ID number;
 VIDEO_ID number;
 im_id number;
-numero number;
+numeros number;
 BEGIN
 SELECT max(id) INTO synopsis_id from SYNOPSIS ;
 SELECT max(id) INTO episode_id from episode ;
@@ -385,8 +385,8 @@ VALUES
     VIDEO_ID + 1,
     istexts
   );
-SELECT max(numero) INTO numero from episode where season_id = p_saison_id;
-IF numero IS NULL THEN numero := 0; END IF;
+SELECT max(numero) INTO numeros from episode where season_id = p_saison_id;
+IF numeros IS NULL THEN numeros := 0; END IF;
 INSERT INTO VIDEO(
     ID,
     VIDEO
@@ -404,7 +404,8 @@ INSERT INTO EPISODE(
     AIR_DATE,
     MEDIA_ID,
     VIDEO_ID,
-    SYNOPSIS_ID
+    SYNOPSIS_ID,
+    NUMERO
   )
 VALUES
   (
@@ -414,14 +415,15 @@ VALUES
     air_time,
     MEDIA_ID + 1,
     VIDEO_ID + 2,
-    SYNOPSIS_ID + 1
+    SYNOPSIS_ID + 1,
+    numeros+1
   );
 commit;
 end;
 /
 
 --creating procedure for adding film
-create or replace procedure add_film (p_name in varchar, p_language in varchar,p_synopsis_text in VARCHAR, p_synopsis_video in BLOB, p_image BLOB, p_producer_id in number,p_country in varchar,year number,p_video BLOB,GENRE_ID number,DURATION number,istexts BOOLEAN) as
+create or replace procedure add_film (p_name in varchar, p_language in varchar,p_synopsis_text in VARCHAR, p_synopsis_video in BLOB, p_image BLOB, p_producer_id in number,p_country in varchar,year number,p_video BLOB,GENRE_ID number,DURATION number,istexts VARCHAR2) as
 film_id number;
 MEDIA_ID number;
 SYNOPSIS_ID number;
@@ -798,8 +800,6 @@ grant execute on check_admin to newuser;
 grant execute on get_film_genre to newuser;
 grant execute on get_serie_genre to newuser;
 grant execute on get_media_name to newuser;
-grant execute on get_media_actor to newuser;
-grant execute on get_media_id to newuser;
 grant execute on get_media_producer to newuser;
 grant execute on insert_comment to newuser;
 grant execute on delete_comment to newuser;

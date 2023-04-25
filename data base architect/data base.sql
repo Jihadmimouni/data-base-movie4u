@@ -225,4 +225,8 @@ ALTER TABLE serie DROP COLUMN producer_id;
 
 
 --adding istext field to synopsis table
-ALTER TABLE synopsis ADD isText BOOLEAN;
+ALTER TABLE synopsis ADD isText VARCHAR2(255);
+
+
+--adding numero field to episode table
+ALTER TABLE episode ADD numero INTEGER;
