@@ -415,7 +415,7 @@ end;
 /
 
 --creating procedure for adding film
-create or replace procedure add_film (p_name in varchar, p_language in varchar,p_synopsis_text in VARCHAR, p_synopsis_video in BLOB, p_image BLOB, p_producer_id in number,p_country in varchar,year number,p_video BLOB,GENRE_ID number,DURATION number) as
+create or replace procedure add_film (p_name in varchar, p_language in varchar,p_synopsis_text in VARCHAR, p_synopsis_video in BLOB, p_image BLOB, p_producer_id in number,p_country in varchar,year number,p_video BLOB,GENRE_ID number,DURATION number,istexts BOOLEAN) as
 film_id number;
 MEDIA_ID number;
 SYNOPSIS_ID number;
@@ -464,13 +464,15 @@ VALUES
 INSERT INTO SYNOPSIS(
     ID,
     TEXT,
-    VIDEO_ID
+    VIDEO_ID,
+    istext
   )
 VALUES
   (
     SYNOPSIS_ID + 1,
     p_synopsis_text,
-    VIDEO_ID + 1
+    VIDEO_ID + 1,
+    istexts
   );
 INSERT INTO VIDEO(
     ID,
@@ -791,6 +793,7 @@ grant execute on get_media_name to newuser;
 grant execute on get_synopsis to newuser;
 grant execute on get_video to newuser;
 grant execute on get_genre to newuser;
+grant execute on add_favorite to newuser;
 grant create session to newuser;
 
 
