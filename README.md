@@ -1,7 +1,3 @@
-
-
-Sure, here's a suggested version of the markdown file:
-
 # Data-Base-Movie4u
 
 This project is a movie database system that can be run using Oracle XE 21. It consists of several SQL scripts that need to be executed in order to create the necessary tables and populate the database.
